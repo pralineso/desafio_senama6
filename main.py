@@ -22,6 +22,8 @@ import seaborn as sns
 import statsmodels.api as sm
 import statsmodels.stats as st
 from sklearn.decomposition import PCA
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LinearRegression
 
 #from loguru import logger
 
@@ -67,7 +69,7 @@ except KeyError:
 
 # ## Inicia sua análise a partir daqui
 
-# In[110]:
+# In[ ]:
 
 
 # 1 tranformei o dataframe em array (matriz)
@@ -77,7 +79,7 @@ except KeyError:
 # 3 depois sim apliquei o PCA
 
 
-# In[20]:
+# In[ ]:
 
 
 #aux =  pd.DataFrame(fifa)
@@ -101,7 +103,7 @@ except KeyError:
 # 
 # Qual fração da variância consegue ser explicada pelo primeiro componente principal de `fifa`? Responda como um único float (entre 0 e 1) arredondado para três casas decimais.
 
-# In[6]:
+# In[ ]:
 
 
 def q1():
@@ -113,7 +115,7 @@ def q1():
 # 
 # Quantos componentes principais precisamos para explicar 95% da variância total? Responda como un único escalar inteiro.
 
-# In[7]:
+# In[ ]:
 
 
 def q2():
@@ -125,7 +127,7 @@ def q2():
 # 
 # Qual são as coordenadas (primeiro e segundo componentes principais) do ponto `x` abaixo? O vetor abaixo já está centralizado. Cuidado para __não__ centralizar o vetor novamente (por exemplo, invocando `PCA.transform()` nele). Responda como uma tupla de float arredondados para três casas decimais.
 
-# In[7]:
+# In[ ]:
 
 
 x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
@@ -139,49 +141,50 @@ x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
      48.38377664,  47.60840355,  45.76793876,  44.61110193,
      49.28911284
 ]
-# 1 transformei a lista x pra um array
-# 2 precisei usar esse reshape por causa da funcao 
-#Se $\mathbf{X}$ for o nosso data set, o algoritmo do SVD nos fornece:
-#$$\mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{T}$$
-#onde $\mathbf{V} = [\vec{\phi}_{1}, \vec{\phi}_{2}, \cdots, \vec{\phi}_{p}]$.
-#se V = vetor de vetores, por isso precisou do reshape (-1,1) onde cada elemento de X virou um vetor
 
 
-# In[61]:
+# In[ ]:
 
 
 # Singular-value decomposition
 #https://machinelearningmastery.com/singular-value-decomposition-for-machine-learning/
 #from numpy import array
+
 #from scipy.linalg import svd
 # define a matrix
 #my_array = np.array(x)
 #my_array = my_array.reshape(1, -1)
 #print(my_array)
 #U, s, VT = svd(my_array)
+
+#print('U')
 #print(U)
+#print('S')
 #print(s)
+#print('VT')
 #print(VT)
 #print("X")
 #X = U*s*VT
-#print(X[0])
+#print('svd')
 
-#print(VT.var())
+#print(svd(my_array))
 
 
-# In[60]:
+# In[ ]:
 
 
 #pca = PCA(n_components=2)
 
-#projected = pca.fit(X)
+#projected = pca.fit_transform(X)
+
+#print(f"Original shape: {X.data.shape}, projected shape: {projected.shape}")
 
 #print(projected.explained_variance_)
 #print(projected.singular_values_)
 #print(projected.noise_variance_)
 
 
-# In[48]:
+# In[ ]:
 
 
 #aux =  pd.DataFrame(fifa)
@@ -189,16 +192,36 @@ x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
 #aux_array_sem_nan = aux_array.to_numpy()
 
 
-# In[ ]:
-
-
-
+#round(projected[0][1],3)
 
 
 # In[ ]:
 
 
+#pca = PCA().fit(X.data)
 
+#evr = pca.explained_variance_ratio_
+
+#evr
+
+
+# In[ ]:
+
+
+#g = sns.lineplot(np.arange(len(evr)), np.cumsum(evr))
+#g.axes.axhline(0.95, ls="--", color="red")
+#plt.xlabel('Number of components')
+#plt.ylabel('Cumulative explained variance');
+
+
+# In[ ]:
+
+
+#pca = PCA(n_components=2, svd_solver='full')
+#pca.fit(X)
+#PCA(n_components=2, svd_solver='full')
+#print(pca.components_)
+#print(pca.singular_values_)
 
 
 # In[ ]:
@@ -222,7 +245,7 @@ x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
 #print(component_number)
 
 
-# In[26]:
+# In[ ]:
 
 
 #aux =  pd.DataFrame(x)
@@ -234,7 +257,7 @@ x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
 #print(projected)
 
 
-# In[27]:
+# In[ ]:
 
 
 #x_array = np.array(x)
@@ -246,13 +269,13 @@ x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
 #pca.fit(x_array)
 
 
-# In[223]:
+# In[ ]:
 
 
 #a = np.add((v))
 
 
-# In[226]:
+# In[ ]:
 
 
 def q3():
@@ -271,104 +294,39 @@ def q3():
 # 
 # Realiza RFE com estimador de regressão linear para selecionar cinco variáveis, eliminando uma a uma. Quais são as variáveis selecionadas? Responda como uma lista de nomes de variáveis.
 
-# In[10]:
-
-
-def q4():
-    # Retorne aqui o resultado da questão 4.
-    pass
-
-
-# In[70]:
-
-
-fifa.head()
-
-
-# In[71]:
-
-
-columns_names = list(fifa.columns)
-plt.figure(figsize = (20,20))
-sns.heatmap(fifa[columns_names].corr().round(2), annot = True)
-
-
-# In[81]:
-
-
-#array_values = fifa.values
-#columns_names
-
-
-# In[62]:
-
-
-#aux =  pd.DataFrame(fifa)
-#aux_array = aux.dropna()
-#aux_array_sem_nan = aux_array.to_numpy()
-
-
-# In[64]:
-
-
-#from sklearn.feature_selection import RFE
-#from sklearn.linear_model import LogisticRegression
-
-#columns_names = list(fifa.columns)
-#array_values = aux_array_sem_nan
-#X = array_values[:,0:36]
-#Y = array_values[:,1]
-# feature extraction
-#model = LogisticRegression(solver='lbfgs')
-#rfe = RFE(model, 5)
-#fit = rfe.fit(X, Y)
-#print("Num Features: %d" % fit.n_features_)
-#print("Selected Features: %s" % fit.support_)
-#print("Feature Ranking: %s" % fit.ranking_)
-
-
-# In[63]:
-
-
-# Feature Extraction with PCA
-#import numpy
-#from pandas import read_csv
-#from sklearn.decomposition import PCA
-# load data
-#url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.csv"
-#names = ['preg', 'plas', 'pres', 'skin', 'test', 'mass', 'pedi', 'age', 'class']
-#dataframe = read_csv(url, names=names)
-#array = dataframe.values
-#X = array[:,0:8]
-#Y = array[:,8]
-# feature extraction
-#pca = PCA(n_components=3)
-#fit = pca.fit(X)
-# summarize components
-#print("Explained Variance: %s" % fit.explained_variance_ratio_)
-#print(fit.components_)
-
-
-# In[65]:
-
-
-#array
-
-
-# In[66]:
-
-
-#array[:,0:8]
-
-
-# In[67]:
-
-
-#array[:,3]
-
-
 # In[ ]:
 
 
+def q4():
+    # salvando o df fifa em um df aux
+    aux =  pd.DataFrame(fifa)
 
+    #df auxiliar sem NaN
+    df_aux = aux.dropna()
+
+    #df com todas as colunas sem Overall
+    y_train = df_aux['Overall']
+
+    #df com a coluna Overall (usei essa coluna como dica do pessoal na comunidade do curso)
+    x_train = df_aux.drop(columns = 'Overall')
+
+    #transformando x_train e y_train para array
+    y = y_train.to_numpy()
+    x = x_train.to_numpy()
+
+    #agora sim implementando o RFE
+    svm = LinearRegression()
+    rfe = RFE(svm, 5)
+    rfe = rfe.fit(x, y)
+
+    #criando um df auxiliar para visualizar melhor o resultado
+    df_aux_result = pd.DataFrame({'coluna':x_train.columns,
+              'bool': rfe.support_,
+              'ranking': rfe.ranking_})
+
+    #filtrando o df axuliar de resultado  pelo ranking para pegar as 5 variaveis 
+    variaveis = list(df_aux_result['coluna'][df_aux_result['ranking']==1])
+
+    return variaveis
+    pass
 
