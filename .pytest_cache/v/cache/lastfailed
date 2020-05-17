@@ -1,7 +1,6 @@
 {
   "test_main.py::test_q3": true,
   "test_main.py::test_q4": true,
-  "test_submit.py": true,
   "test_submit.py::test_q3": true,
   "test_submit.py::test_q4": true
 }
