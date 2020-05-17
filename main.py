@@ -9,7 +9,7 @@
 
 # ## _Setup_ geral
 
-# In[106]:
+# In[3]:
 
 
 from math import sqrt
@@ -26,7 +26,7 @@ from sklearn.decomposition import PCA
 #from loguru import logger
 
 
-# In[107]:
+# In[4]:
 
 
 # Algumas configurações para o matplotlib.
@@ -40,13 +40,13 @@ figsize(12, 8)
 sns.set()
 
 
-# In[108]:
+# In[5]:
 
 
 fifa = pd.read_csv("fifa.csv")
 
 
-# In[109]:
+# In[6]:
 
 
 columns_to_drop = ["Unnamed: 0", "ID", "Name", "Photo", "Nationality", "Flag",
@@ -77,7 +77,7 @@ except KeyError:
 # 3 depois sim apliquei o PCA
 
 
-# In[195]:
+# In[20]:
 
 
 #aux =  pd.DataFrame(fifa)
@@ -105,7 +105,7 @@ except KeyError:
 
 
 def q1():
-    return 0.149
+    return 0.565
     pass
 
 
@@ -117,7 +117,6 @@ def q1():
 
 
 def q2():
-
     return 15
     pass
 
@@ -126,7 +125,7 @@ def q2():
 # 
 # Qual são as coordenadas (primeiro e segundo componentes principais) do ponto `x` abaixo? O vetor abaixo já está centralizado. Cuidado para __não__ centralizar o vetor novamente (por exemplo, invocando `PCA.transform()` nele). Responda como uma tupla de float arredondados para três casas decimais.
 
-# In[123]:
+# In[7]:
 
 
 x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
@@ -148,10 +147,110 @@ x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
 #se V = vetor de vetores, por isso precisou do reshape (-1,1) onde cada elemento de X virou um vetor
 
 
+# In[41]:
+
+
+# Singular-value decomposition
+#https://machinelearningmastery.com/singular-value-decomposition-for-machine-learning/
+from numpy import array
+from scipy.linalg import svd
+# define a matrix
+my_array = np.array(x)
+my_array = my_array.reshape(1, -1)
+#print(my_array)
+U, s, VT = svd(my_array)
+print(U)
+print(s)
+print(VT)
+print("X")
+X = U*s*VT
+print(X[0])
+
+#print(VT.var())
+
+
+# In[45]:
+
+
+pca = PCA(n_components=2)
+
+projected = pca.fit(X)
+
+print(projected.explained_variance_)
+print(projected.singular_values_)
+print(projected.noise_variance_)
+
+
+# In[48]:
+
+
+aux =  pd.DataFrame(fifa)
+aux_array = aux.dropna()
+aux_array_sem_nan = aux_array.to_numpy()
+
+
+# In[58]:
+
+
+y_train = my_array
+X_train = aux_array
+
+
 # In[ ]:
 
 
 
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+#pca = PCA(n_components=2)
+#projected = pca.fit_transform(aux_array_sem_nan.data)
+#print(f"Original shape: {aux_array_sem_nan.data.shape}, projected shape: {projected.shape}")
+#pca = PCA().fit(aux_array_sem_nan.data)
+#evr = pca.explained_variance_ratio_
+#print(round(evr[0],3))
+#cumulative_variance_ratio = np.cumsum(evr)
+#component_number = np.argmax(cumulative_variance_ratio >= 0.95) + 1 # Contagem começa em zero.
+#print(component_number)
+
+
+# In[26]:
+
+
+#aux =  pd.DataFrame(x)
+#aux_array = aux.to_numpy()
+#pca = PCA(n_components=2)
+#pca = PCA().fit(aux_array.data)
+#evr = pca.n_features_
+#evr
+#print(projected)
+
+
+# In[27]:
+
+
+#x_array = np.array(x)
+#X = x_array.reshape(-1,1)
+#X = x_array.reshape(-1, 1)
+#x_array
+
+#pca = PCA(n_components=2, svd_solver='full')
+#pca.fit(x_array)
 
 
 # In[223]:
@@ -160,18 +259,18 @@ x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
 #a = np.add((v))
 
 
-# In[9]:
+# In[226]:
 
 
 def q3():
-    vet = np.array(x)
-    x_array= vet.reshape(-1,1)
-    pca = PCA(n_components=1)
-    pca.fit(x_array)
-    v = pca.explained_variance_
-    v = np.around(v, 3)
+    #vet = np.array(x)
+    #x_array= vet.reshape(-1,1)
+    #pca = PCA(n_components=2)
+    #pca.fit(x_array)
+    #v = pca.explained_variance_
+    #v = np.around(v, 3)
     
-    return tuple(v)
+    #return tuple(v)
     pass
 
 
@@ -185,4 +284,98 @@ def q3():
 def q4():
     # Retorne aqui o resultado da questão 4.
     pass
+
+
+# In[70]:
+
+
+fifa.head()
+
+
+# In[71]:
+
+
+columns_names = list(fifa.columns)
+plt.figure(figsize = (20,20))
+sns.heatmap(fifa[columns_names].corr().round(2), annot = True)
+
+
+# In[81]:
+
+
+#array_values = fifa.values
+#columns_names
+
+
+# In[84]:
+
+
+aux =  pd.DataFrame(fifa)
+aux_array = aux.dropna()
+aux_array_sem_nan = aux_array.to_numpy()
+
+
+# In[85]:
+
+
+#from sklearn.feature_selection import RFE
+#from sklearn.linear_model import LogisticRegression
+
+columns_names = list(fifa.columns)
+array_values = aux_array_sem_nan
+X = array_values[:,0:36]
+Y = array_values[:,1]
+# feature extraction
+model = LogisticRegression(solver='lbfgs')
+rfe = RFE(model, 5)
+fit = rfe.fit(X, Y)
+print("Num Features: %d" % fit.n_features_)
+print("Selected Features: %s" % fit.support_)
+print("Feature Ranking: %s" % fit.ranking_)
+
+
+# In[72]:
+
+
+# Feature Extraction with PCA
+import numpy
+from pandas import read_csv
+from sklearn.decomposition import PCA
+# load data
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.csv"
+names = ['preg', 'plas', 'pres', 'skin', 'test', 'mass', 'pedi', 'age', 'class']
+dataframe = read_csv(url, names=names)
+array = dataframe.values
+X = array[:,0:8]
+Y = array[:,8]
+# feature extraction
+pca = PCA(n_components=3)
+fit = pca.fit(X)
+# summarize components
+print("Explained Variance: %s" % fit.explained_variance_ratio_)
+print(fit.components_)
+
+
+# In[75]:
+
+
+array
+
+
+# In[78]:
+
+
+array[:,0:8]
+
+
+# In[79]:
+
+
+array[:,3]
+
+
+# In[ ]:
+
+
+
 
