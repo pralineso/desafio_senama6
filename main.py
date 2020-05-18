@@ -69,34 +69,31 @@ except KeyError:
 
 # ## Inicia sua análise a partir daqui
 
-# In[ ]:
+# In[264]:
 
 
 # 1 - tranformei o dataframe em array (matriz)
-
 # 2 - removi as linhas sem com valor NaN
-
 # 3 - depois apliquei o PCA
-
-
-# In[262]:
 
 
 aux =  pd.DataFrame(fifa)
 aux_array = aux.dropna()
 aux_array_sem_nan = aux_array.to_numpy()
+
 pca = PCA(n_components=2)
 projected = pca.fit_transform(aux_array_sem_nan.data)
 #print(f"Original shape: {aux_array_sem_nan.data.shape}, projected shape: {projected.shape}")
 pca = PCA().fit(aux_array_sem_nan.data)
+
+#Resultado questao 1
 evr = pca.explained_variance_ratio_
 #print(round(evr[0],3))
+
+#Resultado questao 2
 cumulative_variance_ratio = np.cumsum(evr)
 component_number = np.argmax(cumulative_variance_ratio >= 0.95) + 1 # Contagem começa em zero.
 #print(component_number)
-
-
-#TIVE Q MANDAR SO OS RESULTADOS PORQUE NAO TA INDO AS SOLUÇOES
 
 
 # ## Questão 1
@@ -140,34 +137,10 @@ x = [  0.87747123,  -1.24990363,  -1.3191255,  -36.7341814, -35.55091139, -37.29
 ]
 
 
-# Após varias tentativas fracassada de resolução dessa questão...
-# Eu visualizei a resolução dos outros colegas do grupo.
-# É um jeito bem bobo o de se resolver...
-# Mas não fez mto sentido pra mim.
-# Engraçado que esse scater plot nao me é estranho, em alguma das minhas mil tentativas não salvas ele apareceu.
-# Infelizmente enviei a questão assim mesmo (), para nao ficar com score abaixo do min necessário.
-
-# In[241]:
+# In[265]:
 
 
-aux =  pd.DataFrame(fifa)
-aux_array = aux.dropna()
-aux_array_sem_nan = aux_array.to_numpy()
-
-
-# In[177]:
-
-
-X = np.array(x).reshape(-1, 1)
-Y = np.array(x).reshape(1, -1)
-M = np.dot(X, Y)
-
-
-# In[256]:
-
-
-pca =  PCA()
-#treinar com base no df principal que foi algo que estava me faltando
+#treinar com base no df principal que foi algo que me estava faltando
 pca.fit(aux_array_sem_nan)
 pca_data = pca.transform(aux_array_sem_nan)
 #per_var = pca.explained_variance_ratio_
@@ -175,11 +148,7 @@ per_var = np.round(pca.explained_variance_ratio_*100, decimals=3)
 labels = ['PC' + str(x) for x in range(1, len(per_var)+1)]
 
 
-# In[257]:
-
-
-pca.components_.shape
-
+# pca.components_.shape
 
 # plt.bar(x=range(1, len(per_var)+1), height=per_var, tick_label = labels)
 # plt.ylabel('Porcentacem por Explained Variance')
@@ -194,21 +163,14 @@ pca.components_.shape
 # plt.ylabel('PC2 - {0}%'.format(per_var[1]))
 # 
 # #for sample in pca_df.index:
-#     plt.annotate(sample, (pca_df.PC1.loc[sample], pca_df.PC2.loc[sample]))
+#     #plt.annotate(sample, (pca_df.PC1.loc[sample], pca_df.PC2.loc[sample]))
 #     
 # plt.show()
 
-# In[261]:
-
-
-#essa que é a parte "estranha"
-
-print(np.round(pca.components_.dot(x)[0], decimals=3))
-print(np.round(pca.components_.dot(x)[1], decimals=3))
-
+# print(np.round(pca.components_.dot(x)[0], decimals=3))
+# print(np.round(pca.components_.dot(x)[1], decimals=3))
 
 # In[ ]:
-
 
 
 def q3():
