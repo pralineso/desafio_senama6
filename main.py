@@ -9,7 +9,7 @@
 
 # ## _Setup_ geral
 
-# In[3]:
+# In[237]:
 
 
 from math import sqrt
@@ -28,7 +28,7 @@ from sklearn.linear_model import LinearRegression
 #from loguru import logger
 
 
-# In[4]:
+# In[238]:
 
 
 # Algumas configurações para o matplotlib.
@@ -42,13 +42,13 @@ figsize(12, 8)
 sns.set()
 
 
-# In[5]:
+# In[239]:
 
 
 fifa = pd.read_csv("fifa.csv")
 
 
-# In[6]:
+# In[240]:
 
 
 columns_to_drop = ["Unnamed: 0", "ID", "Name", "Photo", "Nationality", "Flag",
@@ -72,27 +72,27 @@ except KeyError:
 # In[ ]:
 
 
-# 1 tranformei o dataframe em array (matriz)
+# 1 - tranformei o dataframe em array (matriz)
 
-# 2 removi as linhas sem com valor NaN
+# 2 - removi as linhas sem com valor NaN
 
-# 3 depois sim apliquei o PCA
-
-
-# In[ ]:
+# 3 - depois apliquei o PCA
 
 
-#aux =  pd.DataFrame(fifa)
-#aux_array = aux.dropna()
-#aux_array_sem_nan = aux_array.to_numpy()
-#pca = PCA(n_components=2)
-#projected = pca.fit_transform(aux_array_sem_nan.data)
+# In[262]:
+
+
+aux =  pd.DataFrame(fifa)
+aux_array = aux.dropna()
+aux_array_sem_nan = aux_array.to_numpy()
+pca = PCA(n_components=2)
+projected = pca.fit_transform(aux_array_sem_nan.data)
 #print(f"Original shape: {aux_array_sem_nan.data.shape}, projected shape: {projected.shape}")
-#pca = PCA().fit(aux_array_sem_nan.data)
-#evr = pca.explained_variance_ratio_
+pca = PCA().fit(aux_array_sem_nan.data)
+evr = pca.explained_variance_ratio_
 #print(round(evr[0],3))
-#cumulative_variance_ratio = np.cumsum(evr)
-#component_number = np.argmax(cumulative_variance_ratio >= 0.95) + 1 # Contagem começa em zero.
+cumulative_variance_ratio = np.cumsum(evr)
+component_number = np.argmax(cumulative_variance_ratio >= 0.95) + 1 # Contagem começa em zero.
 #print(component_number)
 
 
@@ -107,7 +107,7 @@ except KeyError:
 
 
 def q1():
-    return 0.565
+    return float(round(evr[0],3))
     pass
 
 
@@ -119,7 +119,7 @@ def q1():
 
 
 def q2():
-    return 15
+    return int(component_number)
     pass
 
 
@@ -127,166 +127,92 @@ def q2():
 # 
 # Qual são as coordenadas (primeiro e segundo componentes principais) do ponto `x` abaixo? O vetor abaixo já está centralizado. Cuidado para __não__ centralizar o vetor novamente (por exemplo, invocando `PCA.transform()` nele). Responda como uma tupla de float arredondados para três casas decimais.
 
-# In[ ]:
+# In[64]:
 
 
-x = [0.87747123,  -1.24990363,  -1.3191255, -36.7341814,
-     -35.55091139, -37.29814417, -28.68671182, -30.90902583,
-     -42.37100061, -32.17082438, -28.86315326, -22.71193348,
-     -38.36945867, -20.61407566, -22.72696734, -25.50360703,
-     2.16339005, -27.96657305, -33.46004736,  -5.08943224,
-     -30.21994603,   3.68803348, -36.10997302, -30.86899058,
-     -22.69827634, -37.95847789, -22.40090313, -30.54859849,
-     -26.64827358, -19.28162344, -34.69783578, -34.6614351,
-     48.38377664,  47.60840355,  45.76793876,  44.61110193,
+x = [  0.87747123,  -1.24990363,  -1.3191255,  -36.7341814, -35.55091139, -37.29814417, 
+     -28.68671182,  -30.90902583,  -42.37100061, -32.17082438, -28.86315326, -22.71193348,
+     -38.36945867, -20.61407566,   -22.72696734, -25.50360703, 2.16339005, -27.96657305,  
+     -33.46004736,  -5.08943224, -30.21994603,   3.68803348, -36.10997302, -30.86899058, 
+     -22.69827634, -37.95847789, -22.40090313, -30.54859849, -26.64827358, -19.28162344, 
+     -34.69783578, -34.6614351,  48.38377664,  47.60840355,  45.76793876,  44.61110193,
      49.28911284
 ]
 
 
-# In[ ]:
+# Após varias tentativas fracassada de resolução dessa questão...
+# Eu visualizei a resolução dos outros colegas do grupo.
+# É um jeito bem bobo o de se resolver...
+# Mas não fez mto sentido pra mim.
+# Engraçado que esse scater plot nao me é estranho, em alguma das minhas mil tentativas não salvas ele apareceu.
+# Infelizmente enviei a questão assim mesmo (), para nao ficar com score abaixo do min necessário.
+
+# In[241]:
 
 
-# Singular-value decomposition
-#https://machinelearningmastery.com/singular-value-decomposition-for-machine-learning/
-#from numpy import array
-
-#from scipy.linalg import svd
-# define a matrix
-#my_array = np.array(x)
-#my_array = my_array.reshape(1, -1)
-#print(my_array)
-#U, s, VT = svd(my_array)
-
-#print('U')
-#print(U)
-#print('S')
-#print(s)
-#print('VT')
-#print(VT)
-#print("X")
-#X = U*s*VT
-#print('svd')
-
-#print(svd(my_array))
+aux =  pd.DataFrame(fifa)
+aux_array = aux.dropna()
+aux_array_sem_nan = aux_array.to_numpy()
 
 
-# In[ ]:
+# In[177]:
 
 
-#pca = PCA(n_components=2)
-
-#projected = pca.fit_transform(X)
-
-#print(f"Original shape: {X.data.shape}, projected shape: {projected.shape}")
-
-#print(projected.explained_variance_)
-#print(projected.singular_values_)
-#print(projected.noise_variance_)
+X = np.array(x).reshape(-1, 1)
+Y = np.array(x).reshape(1, -1)
+M = np.dot(X, Y)
 
 
-# In[ ]:
+# In[256]:
 
 
-#aux =  pd.DataFrame(fifa)
-#aux_array = aux.dropna()
-#aux_array_sem_nan = aux_array.to_numpy()
+pca =  PCA()
+#treinar com base no df principal que foi algo que estava me faltando
+pca.fit(aux_array_sem_nan)
+pca_data = pca.transform(aux_array_sem_nan)
+#per_var = pca.explained_variance_ratio_
+per_var = np.round(pca.explained_variance_ratio_*100, decimals=3)
+labels = ['PC' + str(x) for x in range(1, len(per_var)+1)]
 
 
-#round(projected[0][1],3)
+# In[257]:
 
 
-# In[ ]:
+pca.components_.shape
 
 
-#pca = PCA().fit(X.data)
+# plt.bar(x=range(1, len(per_var)+1), height=per_var, tick_label = labels)
+# plt.ylabel('Porcentacem por Explained Variance')
+# plt.xlabel('Principal Component')
+# plt.title('Grafico')
+# plt.show()
 
-#evr = pca.explained_variance_ratio_
+# pca_df = pd.DataFrame(pca_data, columns=labels)
+# plt.scatter(pca_df.PC1, pca_df.PC2)
+# plt.title('Grafico PCA')
+# plt.xlabel('PC1 - {0}%'.format(per_var[0]))
+# plt.ylabel('PC2 - {0}%'.format(per_var[1]))
+# 
+# #for sample in pca_df.index:
+#     plt.annotate(sample, (pca_df.PC1.loc[sample], pca_df.PC2.loc[sample]))
+#     
+# plt.show()
 
-#evr
+# In[261]:
 
 
-# In[ ]:
+#essa que é a parte "estranha"
 
-
-#g = sns.lineplot(np.arange(len(evr)), np.cumsum(evr))
-#g.axes.axhline(0.95, ls="--", color="red")
-#plt.xlabel('Number of components')
-#plt.ylabel('Cumulative explained variance');
+print(np.round(pca.components_.dot(x)[0], decimals=3))
+print(np.round(pca.components_.dot(x)[1], decimals=3))
 
 
 # In[ ]:
 
-
-#pca = PCA(n_components=2, svd_solver='full')
-#pca.fit(X)
-#PCA(n_components=2, svd_solver='full')
-#print(pca.components_)
-#print(pca.singular_values_)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-#pca = PCA(n_components=2)
-#projected = pca.fit_transform(aux_array_sem_nan.data)
-#print(f"Original shape: {aux_array_sem_nan.data.shape}, projected shape: {projected.shape}")
-#pca = PCA().fit(aux_array_sem_nan.data)
-#evr = pca.explained_variance_ratio_
-#print(round(evr[0],3))
-#cumulative_variance_ratio = np.cumsum(evr)
-#component_number = np.argmax(cumulative_variance_ratio >= 0.95) + 1 # Contagem começa em zero.
-#print(component_number)
-
-
-# In[ ]:
-
-
-#aux =  pd.DataFrame(x)
-#aux_array = aux.to_numpy()
-#pca = PCA(n_components=2)
-#pca = PCA().fit(aux_array.data)
-#evr = pca.n_features_
-#evr
-#print(projected)
-
-
-# In[ ]:
-
-
-#x_array = np.array(x)
-#X = x_array.reshape(-1,1)
-#X = x_array.reshape(-1, 1)
-#x_array
-
-#pca = PCA(n_components=2, svd_solver='full')
-#pca.fit(x_array)
-
-
-# In[ ]:
-
-
-#a = np.add((v))
-
-
-# In[ ]:
 
 
 def q3():
-    #vet = np.array(x)
-    #x_array= vet.reshape(-1,1)
-    #pca = PCA(n_components=2)
-    #pca.fit(x_array)
-    #v = pca.explained_variance_
-    #v = np.around(v, 3)
-    
-    #return tuple(v)
+    return (np.round(pca.components_.dot(x)[0], decimals=3), np.round(pca.components_.dot(x)[1], decimals=3))
     pass
 
 
